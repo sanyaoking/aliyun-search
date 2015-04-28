@@ -48,8 +48,8 @@ function createSearchEngine(cfg) {
     var
         appName = cfg.app_name,
         tableName = cfg.table_name,
-        baseSearchUrl = 'http://opensearch.aliyuncs.com/search',
-        baseIndexUrl = 'http://opensearch.aliyuncs.com/index/doc/' + appName,
+        baseSearchUrl = cfg.base_search_url,
+        baseIndexUrl = cfg.base_index_url + appName,
         accessKeyId = cfg.access_key_id,
         accessKeySecret = cfg.access_key_secret + '&',
         makeSignature = function (method, query) {
@@ -72,7 +72,7 @@ function createSearchEngine(cfg) {
                 return key + '=' + encode(value);
             });
             arr.sort();
-            stringToSign = arr.join('&')
+            stringToSign = arr.join('&');
             // sign it:
             hmac = crypto.createHmac('sha1', accessKeySecret);
             hmac.update(method + '&%2F&' + encodeURIComponent(stringToSign));
@@ -105,12 +105,12 @@ function createSearchEngine(cfg) {
             request(opt, function (err, res, body) {
                 if (err) {
                     console.log('[SEARCH ERROR] ' + err);
-                    callback && callback(err);
+                    var cb1 = callback && callback(err);
                     return;
                 }
                 if (res.statusCode !== 200) {
                     console.log('[SEARCH ERROR] ' + res.statusCode + ': ' + body);
-                    callback && callback(new Error('Bad response code: ' + res.statusCode));
+                    var cb2 = callback && callback(new Error('Bad response code: ' + res.statusCode));
                     return;
                 }
                 var r = null;
@@ -119,15 +119,15 @@ function createSearchEngine(cfg) {
                 }
                 catch (e) {
                     console.log('[SEARCH ERROR] failed in parsing json: ' + body);
-                    callback && callback(e);
+                    var cb3 = callback && callback(e);
                     return;
                 }
                 if (r.status && r.status === 'OK') {
-                    callback && callback(null, r);
+                    var cb4 = callback && callback(null, r);
                     return;
                 }
                 console.log('[SEARCH ERROR] ' + body);
-                callback && callback({ error: r.errors});
+                var cb = callback && callback({ error: r.errors});
             });
         };
 
@@ -181,7 +181,7 @@ function createSearchEngine(cfg) {
                     query = query + '&&filter=' + filter(options.filter);
                 }
                 if (options.start || options.hit) {
-                    query = query + '&&config=format:json'
+                    query = query + '&&config=format:json';
                     if (options.start) {
                         query = query + ',start:' + options.start;
                     }
@@ -196,9 +196,7 @@ function createSearchEngine(cfg) {
             };
             httpRequest('GET', baseSearchUrl, qs, callback);
         }
-    }
+    };
 }
 
-module.exports = {
-    createSearchEngine: createSearchEngine
-};
+module.exports = createSearchEngine;
