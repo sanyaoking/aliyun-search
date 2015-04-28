@@ -1,0 +1,28 @@
+{
+  "name": "aliyun-search",
+  "version": "1.0.0",
+  "description": "aliyun search api for nodejs",
+  "main": "aliyun_search.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+      "lodash": "2.4.1",
+      "node-uuid": "1.4.x",
+      "request": "2.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaiwu/aliyun-search"
+  },
+  "keywords": [
+    "aliyun",
+    "opensearch"
+  ],
+  "author": "michaelliao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kaiwu/aliyun-search/issues"
+  },
+  "homepage": "https://github.com/kaiwu/aliyun-search"
+}
