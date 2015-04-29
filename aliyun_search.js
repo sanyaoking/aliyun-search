@@ -1,5 +1,7 @@
 // aliyun_search.js
 
+var debug = require('debug')('search:log');
+var error = require('debug')('search:error');
 var
     _ = require('lodash'),
     crypto = require('crypto'),
@@ -104,12 +106,12 @@ function createSearchEngine(cfg) {
             }
             request(opt, function (err, res, body) {
                 if (err) {
-                    console.log('[SEARCH ERROR] ' + err);
+                    error(err);
                     var cb1 = callback && callback(err);
                     return;
                 }
                 if (res.statusCode !== 200) {
-                    console.log('[SEARCH ERROR] ' + res.statusCode + ': ' + body);
+                    error(res.statusCode + ': ' + body);
                     var cb2 = callback && callback(new Error('Bad response code: ' + res.statusCode));
                     return;
                 }
@@ -118,7 +120,7 @@ function createSearchEngine(cfg) {
                     r = JSON.parse(body);
                 }
                 catch (e) {
-                    console.log('[SEARCH ERROR] failed in parsing json: ' + body);
+                    error('failed in parsing json: ' + body);
                     var cb3 = callback && callback(e);
                     return;
                 }
@@ -126,7 +128,7 @@ function createSearchEngine(cfg) {
                     var cb4 = callback && callback(null, r);
                     return;
                 }
-                console.log('[SEARCH ERROR] ' + body);
+                error(body);
                 var cb = callback && callback({ error: r.errors});
             });
         };
@@ -134,7 +136,7 @@ function createSearchEngine(cfg) {
     return {
         external: false,
         index: function (docs, callback) {
-            console.log('[SEARCH] index docs...');
+            debug('index docs...');
             if (! Array.isArray(docs)) {
                 docs = [docs];
             }
@@ -149,7 +151,7 @@ function createSearchEngine(cfg) {
             httpRequest('POST', baseIndexUrl, qs, callback);
         },
         unindex: function (docs, callback) {
-            console.log('[SEARCH] unindex docs...');
+            debug('unindex docs...');
             if (! Array.isArray(docs)) {
                 docs = [docs];
             }
