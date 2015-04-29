@@ -174,7 +174,9 @@ function createSearchEngine(cfg) {
                 qs,
                 config,
                 index = options && options.index || 'default',
-                query = 'query=' + index + ':\'' + q.replace(/\'/g, ' ') + '\'';
+                //query = 'query=' + index + ':\'' + q.replace(/\'/g, ' ') + '\'';
+                //query=(title:'北京大学' OR title:'浙江大学') AND type:'1'
+                query = 'query=' + q;
             if (options) {
                 if (options.sort) {
                     query = query + '&&sort=' + options.sort;
