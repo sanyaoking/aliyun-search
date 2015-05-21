@@ -173,7 +173,7 @@ function createSearchEngine(cfg) {
             var
                 qs,
                 config,
-                index = options && options.index || 'default',
+                //index = options && options.index || 'default',
                 //query = 'query=' + index + ':\'' + q.replace(/\'/g, ' ') + '\'';
                 //query=(title:'北京大学' OR title:'浙江大学') AND type:'1'
                 query = 'query=' + q;
@@ -183,6 +183,9 @@ function createSearchEngine(cfg) {
                 }
                 if (options.filter) {
                     query = query + '&&filter=' + filter(options.filter);
+                }
+                if (options.aggregate) {
+                    query = query + '&&aggregate=' + filter(options.aggregate);
                 }
                 if (options.start || options.hit) {
                     query = query + '&&config=format:json';
